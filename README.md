@@ -18,7 +18,7 @@ Sistema de informação para uma loja de roupas, com ERP simplificado (cadastros
 | Módulo | Situação |
 |---|---|
 | Autenticação e controle de acesso (perfis Admin, Gerente e Vendedor) | Implementado |
-| Cadastros | Em desenvolvimento |
+| Cadastros (produtos e variações com SKU, clientes, fornecedores, categorias, tamanhos e cores) | Implementado |
 | Compras | Em desenvolvimento |
 | Estoque | Em desenvolvimento |
 | Vendas | Em desenvolvimento |
@@ -32,11 +32,11 @@ Sistema de informação para uma loja de roupas, com ERP simplificado (cadastros
 |---|---|
 | `app.py` | Ponto de entrada: login, menu por perfil |
 | `config.py` | Constantes e parâmetros de negócio |
-| `pages/` | Interface (uma página por funcionalidade) |
+| `views/` | Interface (uma página por funcionalidade) |
 | `services/` | Regras de negócio e integração entre módulos |
 | `db/` | Conexão e acesso ao PostgreSQL |
 | `utils/` | Funções auxiliares (formatação) |
-| `database/` | Scripts SQL: `schema.sql`, `seed_inicial.sql`, `reset.sql` e `teste_banco.sql` |
+| `database/` | Scripts SQL: `schema.sql`, `seed_inicial.sql`, `reset.sql`, `teste_banco.sql` e `migracoes/` (ajustes para bancos criados em versões anteriores) |
 | `.streamlit/` | Configuração do Streamlit e modelo de segredos |
 
 ## Requisitos

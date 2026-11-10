@@ -34,9 +34,10 @@ CREATE UNIQUE INDEX ux_usuarios_email ON usuarios (lower(email));
 -- CADASTROS
 -- ---------------------------------------------------------------------
 CREATE TABLE categorias (
-    id     BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    nome   VARCHAR(80) NOT NULL UNIQUE,
-    ativo  BOOLEAN NOT NULL DEFAULT TRUE
+    id      BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nome    VARCHAR(80) NOT NULL UNIQUE,
+    codigo  VARCHAR(5) NOT NULL UNIQUE CHECK (codigo ~ '^[A-Z0-9]{2,5}$'),
+    ativo   BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE tamanhos (
@@ -46,8 +47,9 @@ CREATE TABLE tamanhos (
 );
 
 CREATE TABLE cores (
-    id    BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    nome  VARCHAR(40) NOT NULL UNIQUE
+    id      BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nome    VARCHAR(40) NOT NULL UNIQUE,
+    codigo  VARCHAR(4) NOT NULL UNIQUE CHECK (codigo ~ '^[A-Z0-9]{1,4}$')
 );
 
 CREATE TABLE produtos (

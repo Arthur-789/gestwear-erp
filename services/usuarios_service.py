@@ -1,13 +1,10 @@
 """Regras de negócio do módulo Autenticação e Controle de Acesso."""
-import re
-
 import psycopg
 
 from config import PERFIS
 from db.connection import execute, fetch_all, fetch_one, transaction
 from services.excecoes import RegraDeNegocioError
-
-_EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+from services.validadores import email_valido
 
 
 def listar_usuarios() -> list[dict]:
@@ -31,7 +28,7 @@ def registrar_login(usuario_id: int) -> None:
 def _validar(email: str, nome: str, perfil: str) -> tuple[str, str]:
     email = (email or "").strip().lower()
     nome = (nome or "").strip()
-    if not _EMAIL_RE.match(email):
+    if not email_valido(email):
         raise RegraDeNegocioError("Informe um e-mail válido.")
     if len(nome) < 3:
         raise RegraDeNegocioError("Informe o nome (mínimo 3 caracteres).")

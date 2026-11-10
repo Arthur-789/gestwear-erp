@@ -10,6 +10,12 @@ FUSO = ZoneInfo("America/Recife")
 
 # Perfis de acesso
 PERFIS = ("ADMIN", "GERENTE", "VENDEDOR")
+PERFIS_GESTAO = ("ADMIN", "GERENTE")
+
+UFS = (
+    "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA",
+    "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO",
+)
 
 # Parâmetros de negócio
 PRAZO_TROCA_DIAS = 30

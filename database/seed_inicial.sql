@@ -7,13 +7,16 @@ INSERT INTO tamanhos (nome, ordem) VALUES
     ('36', 10), ('38', 11), ('40', 12), ('42', 13), ('44', 14), ('46', 15),
     ('UN', 99);
 
-INSERT INTO cores (nome) VALUES
-    ('Branco'), ('Preto'), ('Cinza'), ('Azul'), ('Azul Marinho'), ('Vermelho'),
-    ('Verde'), ('Bege'), ('Rosa'), ('Amarelo'), ('Marrom'), ('Jeans Claro'), ('Jeans Escuro');
+INSERT INTO cores (nome, codigo) VALUES
+    ('Branco', 'BR'), ('Preto', 'PT'), ('Cinza', 'CZ'), ('Azul', 'AZ'),
+    ('Azul Marinho', 'MR'), ('Vermelho', 'VM'), ('Verde', 'VD'), ('Bege', 'BG'),
+    ('Rosa', 'RS'), ('Amarelo', 'AM'), ('Marrom', 'MA'), ('Jeans Claro', 'JC'),
+    ('Jeans Escuro', 'JE');
 
-INSERT INTO categorias (nome) VALUES
-    ('Camisetas'), ('Camisas'), ('Calças'), ('Bermudas e Shorts'),
-    ('Vestidos e Saias'), ('Agasalhos'), ('Íntimas e Meias'), ('Acessórios');
+INSERT INTO categorias (nome, codigo) VALUES
+    ('Camisetas', 'CAM'), ('Camisas', 'CMS'), ('Calças', 'CAL'),
+    ('Bermudas e Shorts', 'BER'), ('Vestidos e Saias', 'VES'),
+    ('Agasalhos', 'AGA'), ('Íntimas e Meias', 'INT'), ('Acessórios', 'ACE');
 
 INSERT INTO contas_financeiras (nome, tipo, saldo_inicial) VALUES
     ('Caixa da Loja', 'CAIXA', 0),

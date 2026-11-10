@@ -91,6 +91,18 @@ BEGIN
     EXCEPTION WHEN OTHERS THEN v_log := v_log || E'\nOK     10. E-mail duplicado bloqueado';
     END;
 
+    BEGIN
+        INSERT INTO cores (nome, codigo) VALUES ('Cor Teste', 'a-b');
+        v_log := v_log || E'\nFALHOU 11. Permitiu código de cor inválido';
+    EXCEPTION WHEN OTHERS THEN v_log := v_log || E'\nOK     11. Código de cor inválido bloqueado';
+    END;
+
+    BEGIN
+        INSERT INTO categorias (nome, codigo) VALUES ('Outra Camiseta', 'CAM');
+        v_log := v_log || E'\nFALHOU 12. Permitiu código de categoria duplicado';
+    EXCEPTION WHEN OTHERS THEN v_log := v_log || E'\nOK     12. Código de categoria duplicado bloqueado';
+    END;
+
     RAISE EXCEPTION E'RESULTADO DOS TESTES (erro intencional: nada foi gravado):%', v_log;
 END;
 $$;
