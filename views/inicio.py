@@ -1,8 +1,10 @@
 """Página inicial: boas-vindas e verificação da conexão com o banco."""
+import pandas as pd
 import streamlit as st
 
 from config import APP_NOME
 from db.connection import fetch_one
+from services import estoque_service
 from services.auth_service import usuario_atual
 
 usuario = usuario_atual()
@@ -28,3 +30,35 @@ try:
     c4.metric("Fornecedores", contagens["fornecedores"])
 except Exception as exc:
     st.error(f"Falha ao consultar o banco: {exc}")
+
+st.subheader("Reposição de estoque")
+try:
+    alertas = estoque_service.alertas_reposicao()
+    if alertas["total"] == 0:
+        st.success("Nenhum SKU abaixo do estoque mínimo.")
+    else:
+        st.warning(
+            f"{alertas['total']} SKU(s) com estoque igual ou abaixo do mínimo. "
+            "Consulte a página Estoque para o detalhamento."
+        )
+        st.dataframe(
+            pd.DataFrame(
+                [
+                    {
+                        "SKU": a["sku"],
+                        "Produto": a["produto"],
+                        "Tamanho": a["tamanho"],
+                        "Cor": a["cor"],
+                        "Estoque": a["estoque_atual"],
+                        "Mínimo": a["estoque_minimo"],
+                    }
+                    for a in alertas["itens"]
+                ]
+            ),
+            hide_index=True,
+            width="stretch",
+        )
+        if alertas["total"] > len(alertas["itens"]):
+            st.caption(f"Exibindo os {len(alertas['itens'])} mais críticos.")
+except Exception as exc:
+    st.error(f"Falha ao consultar o estoque: {exc}")

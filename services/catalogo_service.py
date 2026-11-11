@@ -449,3 +449,19 @@ def atualizar_variacao(variacao_id: int, preco_venda, estoque_minimo, ativo: boo
             f"do custo médio ({fmt_brl(atual['custo_medio'])})."
         )
     return alertas
+
+
+def listar_skus_ativos() -> list[dict]:
+    """Variações ativas de produtos ativos, para seleção em compras e vendas."""
+    return fetch_all(
+        """
+        SELECT v.id, v.sku, p.nome AS produto, t.nome AS tamanho, c.nome AS cor,
+               v.custo_medio, v.preco_venda, v.estoque_atual
+          FROM produto_variacoes v
+          JOIN produtos p ON p.id = v.produto_id
+          JOIN tamanhos t ON t.id = v.tamanho_id
+          JOIN cores c ON c.id = v.cor_id
+         WHERE v.ativo AND p.ativo
+         ORDER BY p.nome, t.ordem, c.nome
+        """
+    )
