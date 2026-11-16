@@ -22,7 +22,7 @@ Sistema de informação para uma loja de roupas, com ERP simplificado (cadastros
 | Compras (pedido, recebimento e contas a pagar) | Implementado |
 | Estoque (posição, movimentações, alertas e ajuste de inventário) | Implementado |
 | Vendas (venda de balcão, baixa de estoque e contas a receber) | Implementado |
-| Operacional (trocas e devoluções) | Em desenvolvimento |
+| Operacional (trocas e devoluções, com retorno ao estoque e acerto financeiro) | Implementado |
 | Financeiro | Em desenvolvimento |
 | Business Intelligence (dashboard) | Em desenvolvimento |
 

@@ -18,3 +18,12 @@ def calcular_custo_medio(
     """Custo médio ponderado após a entrada de uma compra."""
     total = saldo * custo_atual + quantidade * custo_unitario
     return (total / (saldo + quantidade)).quantize(CENTAVO, rounding=ROUND_HALF_UP)
+
+
+def valor_unitario_estorno(preco_unitario: Decimal, valor_total: Decimal, subtotal: Decimal) -> Decimal:
+    """Valor unitário a devolver, rateando o desconto da venda.
+
+    Equivale a preço x (1 - desconto / subtotal). O arredondamento é para baixo no
+    centavo, o que garante que a soma dos estornos nunca ultrapasse o valor pago.
+    """
+    return (preco_unitario * valor_total / subtotal).quantize(CENTAVO, rounding=ROUND_DOWN)

@@ -16,6 +16,7 @@ GESTAO = PERFIS_GESTAO
 MENU = [
     ("Geral", "views/inicio.py", "Início", ":material/home:", TODOS),
     ("Comercial", "views/vendas.py", "Vendas", ":material/point_of_sale:", TODOS),
+    ("Comercial", "views/operacional.py", "Trocas e devoluções", ":material/swap_horiz:", TODOS),
     ("Cadastros", "views/produtos.py", "Produtos", ":material/checkroom:", TODOS),
     ("Cadastros", "views/clientes.py", "Clientes", ":material/person:", TODOS),
     ("Cadastros", "views/fornecedores.py", "Fornecedores", ":material/local_shipping:", GESTAO),
