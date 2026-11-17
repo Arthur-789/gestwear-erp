@@ -1,10 +1,13 @@
 """Validações e normalizações reutilizadas pelos serviços."""
 import re
+from decimal import Decimal, InvalidOperation
 
 from config import UFS
 from services.excecoes import RegraDeNegocioError
+from utils.calculos import CENTAVO
 
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+_LIMITE_VALOR = Decimal("10000000000")
 
 
 def somente_digitos(texto: str | None) -> str:
@@ -65,3 +68,18 @@ def normalizar_contato(
     if sigla and sigla not in UFS:
         raise RegraDeNegocioError("UF inválida.")
     return tel, mail, sigla
+
+
+def valor_monetario(valor, rotulo: str, permitir_zero: bool = False) -> Decimal:
+    """Converte para Decimal com 2 casas. O rótulo é um substantivo masculino (ex.: "saldo inicial")."""
+    if valor is None or valor == "":
+        raise RegraDeNegocioError(f"Informe o {rotulo}.")
+    try:
+        numero = Decimal(str(valor)).quantize(CENTAVO)
+    except (InvalidOperation, ValueError):
+        raise RegraDeNegocioError(f"O {rotulo} é inválido.")
+    if numero < 0 or numero >= _LIMITE_VALOR:
+        raise RegraDeNegocioError(f"O {rotulo} é inválido.")
+    if numero == 0 and not permitir_zero:
+        raise RegraDeNegocioError(f"O {rotulo} deve ser maior que zero.")
+    return numero

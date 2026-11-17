@@ -23,6 +23,7 @@ MENU = [
     ("Cadastros", "views/tabelas_auxiliares.py", "Tabelas auxiliares", ":material/tune:", GESTAO),
     ("Suprimentos", "views/compras.py", "Compras", ":material/shopping_cart:", GESTAO),
     ("Suprimentos", "views/estoque.py", "Estoque", ":material/inventory_2:", TODOS),
+    ("Financeiro", "views/financeiro.py", "Financeiro", ":material/account_balance:", GESTAO),
     ("Administração", "views/usuarios.py", "Usuários", ":material/group:", ("ADMIN",)),
 ]
 
