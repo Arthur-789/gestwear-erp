@@ -26,6 +26,26 @@ def fmt_brl(valor: Decimal | float | int | None) -> str:
     return "R$ " + texto.replace(",", "X").replace(".", ",").replace("X", ".")
 
 
+def fmt_inteiro(valor: int | float | Decimal | None) -> str:
+    if valor is None:
+        return "-"
+    return f"{int(valor):,}".replace(",", ".")
+
+
+def fmt_decimal(valor: Decimal | float | int | None, casas: int = 1) -> str:
+    if valor is None:
+        return "-"
+    return f"{float(valor):,.{casas}f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def fmt_pct(valor: Decimal | float | None, casas: int = 1, sinal: bool = False) -> str:
+    """Formata uma fração como percentual (0,125 vira 12,5%)."""
+    if valor is None:
+        return "-"
+    texto = fmt_decimal(float(valor) * 100, casas)
+    return f"+{texto}%" if sinal and float(valor) > 0 else f"{texto}%"
+
+
 def fmt_cpf(valor: str | None) -> str:
     d = "".join(c for c in (valor or "") if c.isdigit())
     if len(d) != 11:

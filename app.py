@@ -15,6 +15,7 @@ GESTAO = PERFIS_GESTAO
 # (seção, arquivo, título, ícone, perfis permitidos)
 MENU = [
     ("Geral", "views/inicio.py", "Início", ":material/home:", TODOS),
+    ("Gestão", "views/bi.py", "Dashboard BI", ":material/monitoring:", GESTAO),
     ("Comercial", "views/vendas.py", "Vendas", ":material/point_of_sale:", TODOS),
     ("Comercial", "views/operacional.py", "Trocas e devoluções", ":material/swap_horiz:", TODOS),
     ("Cadastros", "views/produtos.py", "Produtos", ":material/checkroom:", TODOS),

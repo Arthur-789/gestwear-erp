@@ -24,7 +24,7 @@ Sistema de informação para uma loja de roupas, com ERP simplificado (cadastros
 | Vendas (venda de balcão, baixa de estoque e contas a receber) | Implementado |
 | Operacional (trocas e devoluções, com retorno ao estoque e acerto financeiro) | Implementado |
 | Financeiro (contas a pagar e a receber, caixa e bancos, fluxo de caixa e conciliação) | Implementado |
-| Business Intelligence (dashboard) | Em desenvolvimento |
+| Business Intelligence (dashboard com indicadores, rankings e análises temporais, comparativas e gerenciais) | Implementado |
 
 ## Estrutura do projeto
 
@@ -36,6 +36,7 @@ Sistema de informação para uma loja de roupas, com ERP simplificado (cadastros
 | `services/` | Regras de negócio e integração entre módulos |
 | `db/` | Conexão e acesso ao PostgreSQL |
 | `utils/` | Funções auxiliares (formatação) |
+| `scripts/` | Utilitários de linha de comando (`popular_dados.py`) |
 | `database/` | Scripts SQL: `schema.sql`, `seed_inicial.sql`, `reset.sql`, `teste_banco.sql` e `migracoes/` (ajustes para bancos criados em versões anteriores) |
 | `.streamlit/` | Configuração do Streamlit e modelo de segredos |
 
@@ -115,6 +116,37 @@ streamlit run app.py
 ```
 
 Acesse http://localhost:8501 e entre com um e-mail cadastrado na tabela `usuarios`. Novos usuários são cadastrados pelo perfil Admin, na página **Usuários**.
+
+## Dados de demonstração
+
+O dashboard de BI lê apenas o que está no banco. Para ter histórico a analisar, o script `scripts/popular_dados.py` gera o histórico do último ano, da data de hoje no ano anterior até hoje (cadastros, compras, vendas, trocas e devoluções, pagamentos, recebimentos e conciliação). Ele usa os próprios serviços do sistema, então todas as regras de negócio, o estoque e o financeiro ficam consistentes.
+
+```bash
+python scripts/popular_dados.py
+```
+
+| Opção | Descrição |
+|---|---|
+| `--semente N` | Semente aleatória, para repetir o mesmo histórico. Padrão: 100 |
+
+Observações:
+
+- Execute na raiz do projeto, com o ambiente virtual ativo e o `secrets.toml` configurado.
+- O período é sempre o último ano, calculado na hora da execução.
+- É preciso ter ao menos um usuário ADMIN cadastrado.
+- O script cria usuários de demonstração (e-mails `@gestwear.demo`), que não conseguem entrar no sistema por não terem conta Google, e define o saldo inicial das contas Caixa e Banco.
+- O volume é enxuto de propósito (cerca de 60 SKUs, 40 clientes e algumas centenas de vendas): suficiente para demonstrar todas as telas e análises. A duração contra o Supabase depende da latência da conexão.
+- O script se recusa a rodar se o banco já tiver vendas ou compras. Para recomeçar, apague os dados antes (veja a seção seguinte).
+
+### Apagar os dados (somente quando necessário)
+
+`scripts/limpar_dados.py` apaga os produtos, clientes, fornecedores, compras, vendas, trocas, estoque e financeiro, e faz os identificadores voltarem a 1. Os usuários (exceto os de demonstração), as tabelas auxiliares e as contas financeiras (com saldo inicial zerado) são mantidos.
+
+```bash
+python scripts/limpar_dados.py
+```
+
+O script mostra o banco de destino e a quantidade de registros, e só apaga depois que a frase `APAGAR TUDO` for digitada. A operação não pode ser desfeita. Nada no aplicativo chama este script. Para eliminar também a estrutura do banco, use `database/reset.sql`.
 
 ## Solução de problemas
 
