@@ -11,7 +11,7 @@ from services import vendas_service as vendas
 from services.auth_service import usuario_atual
 from services.excecoes import RegraDeNegocioError
 from utils.datas import hoje
-from utils.formatacao import fmt_brl, fmt_cpf, fmt_data, fmt_datahora
+from utils.formatacao import fmt_brl, fmt_brl_md, fmt_cpf, fmt_data, fmt_datahora
 from utils.ui import avisar_apos_recarregar, exibir_mensagens
 
 usuario = usuario_atual()
@@ -107,8 +107,8 @@ with abas[0]:
             subtotal += valor_item
             col_a.write(item["descricao"])
             col_b.write(f"{item['quantidade']} un.")
-            col_c.write(fmt_brl(item["preco_unitario"]))
-            col_d.write(fmt_brl(valor_item))
+            col_c.write(fmt_brl_md(item["preco_unitario"]))
+            col_d.write(fmt_brl_md(valor_item))
             if col_e.button("", icon=":material/delete:", key=f"{k}_remover_{item['variacao_id']}"):
                 carrinho.pop(posicao)
                 st.rerun()
@@ -126,7 +126,7 @@ with abas[0]:
     )
     if not pode_ver_custo and subtotal > 0:
         p1.caption(
-            f"Máximo sem aprovação: {fmt_brl(subtotal * DESCONTO_MAX_SEM_APROVACAO)}"
+            f"Máximo sem aprovação: {fmt_brl_md(subtotal * DESCONTO_MAX_SEM_APROVACAO)}"
         )
     parcelas = p3.number_input(
         "Parcelas", min_value=1, max_value=12, value=1, step=1,
@@ -144,13 +144,13 @@ with abas[0]:
             erro = str(e)
 
         m1, m2, m3 = st.columns(3)
-        m1.metric("Subtotal", fmt_brl(subtotal))
+        m1.metric("Subtotal", fmt_brl_md(subtotal))
         percentual = (Decimal(str(desconto)) / subtotal * 100) if subtotal else Decimal("0")
         m2.metric(
-            "Desconto", fmt_brl(desconto), f"{percentual:.1f}% do subtotal",
+            "Desconto", fmt_brl_md(desconto), f"{percentual:.1f}% do subtotal",
             delta_color="off", delta_arrow="off",
         )
-        m3.metric("Total", fmt_brl(resumo["total"]) if resumo else "-")
+        m3.metric("Total", fmt_brl_md(resumo["total"]) if resumo else "-")
 
         if erro:
             st.warning(erro)
@@ -159,7 +159,7 @@ with abas[0]:
             st.dataframe(
                 pd.DataFrame(
                     [
-                        {"Parcela": f"{n}/{resumo['num_parcelas']}", "Valor": fmt_brl(v), "Vencimento": fmt_data(d)}
+                        {"Parcela": f"{n}/{resumo['num_parcelas']}", "Valor": fmt_brl_md(v), "Vencimento": fmt_data(d)}
                         for n, (v, d) in enumerate(zip(resumo["parcelas"], vencimentos), start=1)
                     ]
                 ),
@@ -193,7 +193,7 @@ with abas[0]:
             st.session_state.pop(chave_carrinho, None)
             st.session_state["venda_detalhe"] = resultado["id"]
             avisar_apos_recarregar(
-                f"Venda #{resultado['id']} registrada: {fmt_brl(resultado['valor_total'])}. "
+                f"Venda #{resultado['id']} registrada: {fmt_brl_md(resultado['valor_total'])}. "
                 "O estoque foi baixado e o financeiro atualizado. Veja o detalhe na aba Histórico."
             )
             st.rerun()
@@ -225,8 +225,8 @@ with abas[1]:
         faturamento = sum((v["valor_total"] for v in lista), Decimal("0"))
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("Vendas", len(lista))
-        m2.metric("Faturamento", fmt_brl(faturamento))
-        m3.metric("Ticket médio", fmt_brl(faturamento / len(lista)))
+        m2.metric("Faturamento", fmt_brl_md(faturamento))
+        m3.metric("Ticket médio", fmt_brl_md(faturamento / len(lista)))
         m4.metric("Unidades vendidas", sum(v["unidades"] for v in lista))
         if len(lista) == limite:
             st.caption(f"Exibindo as {limite} vendas mais recentes do filtro; os totais consideram apenas elas.")
@@ -268,7 +268,7 @@ with abas[1]:
         venda = vendas.buscar_venda(venda_id)
 
         colunas_resumo = st.columns(4 if pode_ver_custo else 3)
-        colunas_resumo[0].metric("Total", fmt_brl(venda["valor_total"]))
+        colunas_resumo[0].metric("Total", fmt_brl_md(venda["valor_total"]))
         colunas_resumo[1].metric(
             "Pagamento", vendas.rotulo_pagamento(venda["forma_pagamento"], venda["num_parcelas"])
         )
@@ -277,12 +277,12 @@ with abas[1]:
             custo_total = sum((i["quantidade"] * i["custo_unitario"] for i in venda["itens"]), Decimal("0"))
             margem = venda["valor_total"] - custo_total
             colunas_resumo[3].metric(
-                "Margem bruta", fmt_brl(margem), f"{margem / venda['valor_total'] * 100:.1f}%",
+                "Margem bruta", fmt_brl_md(margem), f"{margem / venda['valor_total'] * 100:.1f}%",
                 delta_color="off", delta_arrow="off",
             )
         st.caption(
             f"Cliente: {venda['cliente'] or 'Consumidor final'} | Vendedor: {venda['usuario']}"
-            + (f" | Desconto: {fmt_brl(venda['desconto'])}" if venda["desconto"] else "")
+            + (f" | Desconto: {fmt_brl_md(venda['desconto'])}" if venda["desconto"] else "")
             + (f" | Observação: {venda['observacao']}" if venda["observacao"] else "")
         )
 
@@ -297,8 +297,8 @@ with abas[1]:
                 "Preço unitário": fmt_brl(i["preco_unitario"]),
             }
             if pode_ver_custo:
-                linha["Custo unitário"] = fmt_brl(i["custo_unitario"])
-            linha["Subtotal"] = fmt_brl(i["subtotal"])
+                linha["Custo unitário"] = fmt_brl_md(i["custo_unitario"])
+            linha["Subtotal"] = fmt_brl_md(i["subtotal"])
             linha["Devolvido"] = i["quantidade_devolvida"]
             linhas_itens.append(linha)
         st.dataframe(pd.DataFrame(linhas_itens), hide_index=True, width="stretch")

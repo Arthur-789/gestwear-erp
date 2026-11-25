@@ -1,6 +1,8 @@
 """Componentes auxiliares de interface."""
 import streamlit as st
 
+from utils.formatacao import escapar_markdown
+
 _CHAVE = "_mensagens_pendentes"
 _EXIBIDORES = {"success": st.success, "warning": st.warning, "info": st.info}
 
@@ -12,4 +14,4 @@ def avisar_apos_recarregar(texto: str, tipo: str = "success") -> None:
 
 def exibir_mensagens() -> None:
     for tipo, texto in st.session_state.pop(_CHAVE, []):
-        _EXIBIDORES[tipo](texto)
+        _EXIBIDORES[tipo](escapar_markdown(texto))

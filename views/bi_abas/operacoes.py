@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 
 from services import operacional_service
-from utils.formatacao import fmt_brl, fmt_decimal, fmt_inteiro, fmt_pct
+from utils.formatacao import fmt_brl, fmt_brl_md, fmt_decimal, fmt_inteiro, fmt_pct
 from views.bi_abas import comum
 
 
@@ -14,11 +14,11 @@ def _trocas_devolucoes(inicio: date, fim: date, resumo: dict) -> None:
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Trocas e devoluções", fmt_inteiro(total), f"{fmt_inteiro(resumo['devolucoes'])} devoluções e "
               f"{fmt_inteiro(resumo['trocas'])} trocas", delta_color="off", delta_arrow="off")
-    m2.metric("Valor devolvido", fmt_brl(resumo["valor_devolvido"]),
+    m2.metric("Valor devolvido", fmt_brl_md(resumo["valor_devolvido"]),
               f"{fmt_pct(resumo['taxa_devolucao_valor'])} do faturamento", delta_color="off", delta_arrow="off")
     m3.metric("Unidades devolvidas", fmt_inteiro(resumo["unidades_devolvidas"]),
               f"{fmt_pct(resumo['taxa_devolucao_unidades'])} das vendidas", delta_color="off", delta_arrow="off")
-    m4.metric("Perda por defeito (custo)", fmt_brl(resumo["perda_defeito"]))
+    m4.metric("Perda por defeito (custo)", fmt_brl_md(resumo["perda_defeito"]))
     if not total:
         comum.sem_dados("Nenhuma troca ou devolução no período.")
         return
@@ -74,7 +74,7 @@ def _compras(inicio: date, fim: date, agrupamento: str) -> None:
     pedidos = sum(f["pedidos"] for f in fornecedores)
     pendentes = sum(f["pendentes"] for f in fornecedores)
     m1, m2, m3 = st.columns(3)
-    m1.metric("Compras no período", fmt_brl(valor_total), f"{fmt_inteiro(pedidos)} pedidos", delta_color="off", delta_arrow="off")
+    m1.metric("Compras no período", fmt_brl_md(valor_total), f"{fmt_inteiro(pedidos)} pedidos", delta_color="off", delta_arrow="off")
     m2.metric("Pedidos aguardando recebimento", fmt_inteiro(pendentes))
     prazos = [f["prazo_medio_dias"] for f in fornecedores if f["prazo_medio_dias"] is not None]
     m3.metric("Prazo médio de entrega", comum.fmt_dias(sum(prazos) / len(prazos)) if prazos else "-")

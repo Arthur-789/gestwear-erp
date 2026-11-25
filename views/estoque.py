@@ -10,7 +10,7 @@ from services import estoque_service as estoque
 from services.auth_service import usuario_atual
 from services.excecoes import RegraDeNegocioError
 from utils.datas import hoje
-from utils.formatacao import fmt_brl, fmt_datahora
+from utils.formatacao import fmt_brl_md, fmt_datahora
 from utils.ui import avisar_apos_recarregar, exibir_mensagens
 
 usuario = usuario_atual()
@@ -52,7 +52,7 @@ with abas[0]:
     colunas_metricas[1].metric("SKUs abaixo do mínimo", em_alerta)
     if pode_ajustar:
         valor = sum(p["estoque_atual"] * p["custo_medio"] for p in posicao)
-        colunas_metricas[2].metric("Valor em estoque (custo médio)", fmt_brl(valor))
+        colunas_metricas[2].metric("Valor em estoque (custo médio)", fmt_brl_md(valor))
 
     if not posicao:
         st.info("Nenhum SKU encontrado.")
@@ -70,8 +70,8 @@ with abas[0]:
                 "Situação": situacao(p),
             }
             if pode_ajustar:
-                linha["Custo médio"] = fmt_brl(p["custo_medio"])
-            linha["Preço"] = fmt_brl(p["preco_venda"])
+                linha["Custo médio"] = fmt_brl_md(p["custo_medio"])
+            linha["Preço"] = fmt_brl_md(p["preco_venda"])
             linhas.append(linha)
         st.dataframe(pd.DataFrame(linhas), hide_index=True, width="stretch")
 

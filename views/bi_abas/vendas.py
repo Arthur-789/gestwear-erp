@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 
 from services import vendas_service
-from utils.formatacao import fmt_brl, fmt_data, fmt_inteiro, fmt_pct
+from utils.formatacao import fmt_brl, fmt_brl_md, fmt_data, fmt_inteiro, fmt_pct
 from views.bi_abas import comum
 
 
@@ -17,7 +17,7 @@ def renderizar(inicio: date, fim: date, agrupamento: str) -> None:
 
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Vendas", fmt_inteiro(resumo["num_vendas"]))
-    m2.metric("Descontos concedidos", fmt_brl(resumo["descontos"]),
+    m2.metric("Descontos concedidos", fmt_brl_md(resumo["descontos"]),
               f"{fmt_pct(resumo['desconto_medio_pct'])} do valor bruto", delta_color="off", delta_arrow="off")
     m3.metric("Vendas com cliente identificado", fmt_pct(resumo["vendas_com_cliente"] / resumo["num_vendas"]),
               f"{fmt_inteiro(resumo['clientes_ativos'])} clientes", delta_color="off", delta_arrow="off")
@@ -69,7 +69,7 @@ def renderizar(inicio: date, fim: date, agrupamento: str) -> None:
     with direita:
         comum.tabela(
             [
-                {"Dia": d["nome"], "Vendas": fmt_inteiro(d["num_vendas"]), "Faturamento": fmt_brl(d["faturamento"]),
+                {"Dia": d["nome"], "Vendas": fmt_inteiro(d["num_vendas"]), "Faturamento": fmt_brl_md(d["faturamento"]),
                  "Média por dia": fmt_brl(d["media_por_dia"])}
                 for d in dias
             ]

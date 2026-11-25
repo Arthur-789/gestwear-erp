@@ -7,7 +7,7 @@ import streamlit as st
 
 from services import tesouraria_service as tesouraria
 from utils.datas import hoje
-from utils.formatacao import fmt_brl, fmt_inteiro, fmt_pct
+from utils.formatacao import fmt_brl, fmt_brl_md, fmt_inteiro, fmt_pct
 from views.bi_abas import comum
 
 _VERDE, _VERMELHO = "#2e7d32", "#c62828"
@@ -17,23 +17,23 @@ def _contas() -> None:
     contas = comum.contas_financeiras(True)
     total = sum((c["saldo_atual"] for c in contas), Decimal("0.00"))
     colunas = st.columns(len(contas) + 1)
-    colunas[0].metric("Saldo total", fmt_brl(total))
+    colunas[0].metric("Saldo total", fmt_brl_md(total))
     for coluna, conta in zip(colunas[1:], contas):
-        coluna.metric(f"{conta['nome']} ({tesouraria.TIPOS_CONTA[conta['tipo']]})", fmt_brl(conta["saldo_atual"]))
+        coluna.metric(f"{conta['nome']} ({tesouraria.TIPOS_CONTA[conta['tipo']]})", fmt_brl_md(conta["saldo_atual"]))
 
     situacao = comum.situacao_contas()
     r, p = situacao["receber"], situacao["pagar"]
     a1, a2, a3, a4 = st.columns(4)
-    a1.metric("A receber em aberto", fmt_brl(r["aberto"]))
-    a2.metric("A receber vencido", fmt_brl(r["vencido"]),
+    a1.metric("A receber em aberto", fmt_brl_md(r["aberto"]))
+    a2.metric("A receber vencido", fmt_brl_md(r["vencido"]),
               f"{fmt_pct(r['pct_vencido'])} da carteira", delta_color="off", delta_arrow="off")
-    a3.metric("A receber (30 dias)", fmt_brl(r["a_vencer_30"]), f"{fmt_brl(r['a_vencer_7'])} em 7 dias",
+    a3.metric("A receber (30 dias)", fmt_brl_md(r["a_vencer_30"]), f"{fmt_brl_md(r['a_vencer_7'])} em 7 dias",
               delta_color="off", delta_arrow="off")
     a4.metric("Parcelas vencidas a receber", fmt_inteiro(r["qtd_vencidas"]))
     b1, b2, b3, b4 = st.columns(4)
-    b1.metric("A pagar em aberto", fmt_brl(p["aberto"]))
-    b2.metric("A pagar vencido", fmt_brl(p["vencido"]))
-    b3.metric("A pagar (30 dias)", fmt_brl(p["a_vencer_30"]), f"{fmt_brl(p['a_vencer_7'])} em 7 dias",
+    b1.metric("A pagar em aberto", fmt_brl_md(p["aberto"]))
+    b2.metric("A pagar vencido", fmt_brl_md(p["vencido"]))
+    b3.metric("A pagar (30 dias)", fmt_brl_md(p["a_vencer_30"]), f"{fmt_brl_md(p['a_vencer_7'])} em 7 dias",
               delta_color="off", delta_arrow="off")
     b4.metric("Contas vencidas a pagar", fmt_inteiro(p["qtd_vencidas"]))
 
@@ -43,10 +43,10 @@ def _fluxo_realizado(inicio: date, fim: date, agrupamento: str) -> None:
     por = "month" if agrupamento == "month" or (fim - inicio).days > 366 else "day"
     dados = comum.fluxo_realizado(inicio, fim, por, None)
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Saldo no início", fmt_brl(dados["saldo_inicial"]))
-    m2.metric("Entradas", fmt_brl(dados["total_entradas"]))
-    m3.metric("Saídas", fmt_brl(dados["total_saidas"]))
-    m4.metric("Saldo no fim", fmt_brl(dados["saldo_final"]))
+    m1.metric("Saldo no início", fmt_brl_md(dados["saldo_inicial"]))
+    m2.metric("Entradas", fmt_brl_md(dados["total_entradas"]))
+    m3.metric("Saídas", fmt_brl_md(dados["total_saidas"]))
+    m4.metric("Saldo no fim", fmt_brl_md(dados["saldo_final"]))
     pontos = dados["periodos"]
     indice = pd.to_datetime([p["periodo"] for p in pontos])
     esquerda, direita = st.columns(2)
@@ -137,10 +137,10 @@ def _inadimplencia() -> None:
 def _projecao() -> None:
     dados = comum.fluxo_projetado(hoje() + timedelta(days=30), "day")
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Saldo atual", fmt_brl(dados["saldo_inicial"]))
-    m2.metric("A receber (inclui vencidas)", fmt_brl(dados["total_receber"]))
-    m3.metric("A pagar (inclui vencidas)", fmt_brl(dados["total_pagar"]))
-    m4.metric("Saldo projetado em 30 dias", fmt_brl(dados["saldo_final"]))
+    m1.metric("Saldo atual", fmt_brl_md(dados["saldo_inicial"]))
+    m2.metric("A receber (inclui vencidas)", fmt_brl_md(dados["total_receber"]))
+    m3.metric("A pagar (inclui vencidas)", fmt_brl_md(dados["total_pagar"]))
+    m4.metric("Saldo projetado em 30 dias", fmt_brl_md(dados["saldo_final"]))
     pontos = dados["periodos"]
     st.line_chart(
         pd.DataFrame({"Saldo projetado": [float(p["saldo_acumulado"]) for p in pontos]},

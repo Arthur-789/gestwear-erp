@@ -5,7 +5,7 @@ import streamlit as st
 from services import clientes_service as clientes
 from services import contas_receber_service as receber
 from services.excecoes import RegraDeNegocioError
-from utils.formatacao import fmt_brl, fmt_data, fmt_datahora
+from utils.formatacao import fmt_brl, fmt_brl_md, fmt_data, fmt_datahora
 from utils.ui import avisar_apos_recarregar
 from views.financeiro_abas.comum import formulario_baixa
 
@@ -36,9 +36,9 @@ def renderizar(usuario: dict) -> None:
     filtros = (situacao, origem, cliente_id, None, venc_de, venc_ate)
     totais = receber.resumo(*filtros)
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("A vencer", fmt_brl(totais["a_vencer"]))
-    m2.metric("Vencido", fmt_brl(totais["vencido"]))
-    m3.metric("Recebido", fmt_brl(totais["recebido"]))
+    m1.metric("A vencer", fmt_brl_md(totais["a_vencer"]))
+    m2.metric("Vencido", fmt_brl_md(totais["vencido"]))
+    m3.metric("Recebido", fmt_brl_md(totais["recebido"]))
     m4.metric("Contas", totais["total"])
 
     limite = 500
@@ -94,13 +94,13 @@ def renderizar(usuario: dict) -> None:
 
     if conta["status"] == "ABERTA":
         clicou, conta_financeira_id, data = formulario_baixa(
-            f"rec_baixa_{conta_id}", f"Registrar recebimento de {fmt_brl(conta['valor'])}",
+            f"rec_baixa_{conta_id}", f"Registrar recebimento de {fmt_brl_md(conta['valor'])}",
             "Receber em", conta["valor"], conta["data_origem"], saida=False,
         )
         if clicou:
             try:
                 receber.receber(conta_id, conta_financeira_id, data, usuario["id"])
-                avisar_apos_recarregar(f"Recebimento de {fmt_brl(conta['valor'])} registrado.")
+                avisar_apos_recarregar(f"Recebimento de {fmt_brl_md(conta['valor'])} registrado.")
                 st.rerun()
             except RegraDeNegocioError as e:
                 st.error(str(e))

@@ -11,7 +11,7 @@ from services import vendas_service
 from services.auth_service import usuario_atual
 from services.excecoes import RegraDeNegocioError
 from utils.datas import data_local, hoje
-from utils.formatacao import fmt_brl, fmt_data, fmt_datahora
+from utils.formatacao import escapar_markdown, fmt_brl, fmt_brl_md, fmt_data, fmt_datahora
 from utils.ui import avisar_apos_recarregar, exibir_mensagens
 
 usuario = usuario_atual()
@@ -100,7 +100,7 @@ with abas[0]:
                 f"{descricao_sku(item)}  \n"
                 f"Vendidos: {item['quantidade']} | já devolvidos: {item['quantidade_devolvida']}"
             )
-            b.write(f"{fmt_brl(item['valor_unitario'])} por unidade")
+            b.write(f"{fmt_brl_md(item['valor_unitario'])} por unidade")
             quantidade = c.number_input(
                 "Quantidade", min_value=0, max_value=item["disponivel"], value=0, step=1,
                 label_visibility="collapsed", key=f"{k}_dev_{item['id']}_{item['disponivel']}",
@@ -159,8 +159,8 @@ with abas[0]:
                     valor_novos += subtotal_novo
                     col_a.write(novo["descricao"])
                     col_b.write(f"{novo['quantidade']} un.")
-                    col_c.write(fmt_brl(novo["preco_unitario"]))
-                    col_d.write(fmt_brl(subtotal_novo))
+                    col_c.write(fmt_brl_md(novo["preco_unitario"]))
+                    col_d.write(fmt_brl_md(subtotal_novo))
                     if col_e.button("", icon=":material/delete:", key=f"{k}_remover_{novo['variacao_id']}"):
                         carrinho.pop(posicao)
                         st.rerun()
@@ -172,25 +172,25 @@ with abas[0]:
         forma_diferenca = None
         if tipo == "DEVOLUCAO":
             m1, m2 = st.columns(2)
-            m1.metric("Valor devolvido", fmt_brl(valor_devolvido))
-            m2.metric("Estorno ao cliente", fmt_brl(valor_devolvido))
+            m1.metric("Valor devolvido", fmt_brl_md(valor_devolvido))
+            m2.metric("Estorno ao cliente", fmt_brl_md(valor_devolvido))
             if valor_devolvido:
                 st.caption("Será gerada uma conta a pagar de estorno, a ser paga pelo Financeiro.")
         else:
             m1, m2, m3 = st.columns(3)
-            m1.metric("Valor devolvido", fmt_brl(valor_devolvido))
-            m2.metric("Valor dos itens novos", fmt_brl(valor_novos))
+            m1.metric("Valor devolvido", fmt_brl_md(valor_devolvido))
+            m2.metric("Valor dos itens novos", fmt_brl_md(valor_novos))
             if diferenca > 0:
-                m3.metric("Cliente paga", fmt_brl(diferenca))
+                m3.metric("Cliente paga", fmt_brl_md(diferenca))
                 forma_diferenca = st.selectbox(
                     "Forma de pagamento da diferença", list(oper.FORMAS_DIFERENCA),
                     format_func=lambda f: vendas_service.FORMAS_PAGAMENTO[f], key=f"{k}_forma",
                 )
             elif diferenca < 0:
-                m3.metric("Estorno ao cliente", fmt_brl(-diferenca))
+                m3.metric("Estorno ao cliente", fmt_brl_md(-diferenca))
                 st.caption("A diferença a favor do cliente gera uma conta a pagar de estorno.")
             else:
-                m3.metric("Diferença", fmt_brl(0))
+                m3.metric("Diferença", fmt_brl_md(0))
 
         observacao = st.text_input("Observação (opcional)", key=f"{k}_obs")
 
@@ -251,7 +251,7 @@ with abas[1]:
         m1.metric("Solicitações", len(lista))
         m2.metric("Devoluções", sum(1 for t in lista if t["tipo"] == "DEVOLUCAO"))
         m3.metric("Trocas", sum(1 for t in lista if t["tipo"] == "TROCA"))
-        m4.metric("Valor devolvido", fmt_brl(sum((t["valor_devolvido"] for t in lista), Decimal("0"))))
+        m4.metric("Valor devolvido", fmt_brl_md(sum((t["valor_devolvido"] for t in lista), Decimal("0"))))
         if len(lista) == limite:
             st.caption(f"Exibindo as {limite} solicitações mais recentes do filtro; os totais consideram apenas elas.")
 
@@ -303,10 +303,12 @@ with abas[1]:
         colunas[1].metric("Motivo", oper.MOTIVOS[troca["motivo"]])
         colunas[2].metric(
             "Acerto financeiro",
-            acerto_financeiro(troca["tipo"], troca["valor_devolvido"], troca["valor_novos"], troca["valor_diferenca"]),
+            escapar_markdown(
+                acerto_financeiro(troca["tipo"], troca["valor_devolvido"], troca["valor_novos"], troca["valor_diferenca"])
+            ),
         )
         if pode_ver_custo:
-            colunas[3].metric("Perda por defeito (custo)", fmt_brl(perda))
+            colunas[3].metric("Perda por defeito (custo)", fmt_brl_md(perda))
         st.caption(
             f"Venda #{troca['venda_id']} de {fmt_data(troca['data_venda'])} | "
             f"Cliente: {troca['cliente'] or 'Consumidor final'} | Responsável: {troca['usuario']}"
@@ -351,8 +353,8 @@ with abas[1]:
                     "Preço unitário": fmt_brl(n["preco_unitario"]),
                 }
                 if pode_ver_custo:
-                    linha["Custo unitário"] = fmt_brl(n["custo_unitario"])
-                linha["Subtotal"] = fmt_brl(n["subtotal"])
+                    linha["Custo unitário"] = fmt_brl_md(n["custo_unitario"])
+                linha["Subtotal"] = fmt_brl_md(n["subtotal"])
                 linhas_novos.append(linha)
             st.dataframe(pd.DataFrame(linhas_novos), hide_index=True, width="stretch")
 

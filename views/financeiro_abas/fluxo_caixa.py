@@ -8,7 +8,7 @@ from services import fluxo_caixa_service as fluxo
 from services import tesouraria_service as tesouraria
 from services.excecoes import RegraDeNegocioError
 from utils.datas import hoje
-from utils.formatacao import fmt_brl
+from utils.formatacao import fmt_brl, fmt_brl_md
 
 _VERDE, _VERMELHO = "#2e7d32", "#c62828"
 
@@ -66,10 +66,10 @@ def _realizado() -> None:
         return
 
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Saldo inicial", fmt_brl(dados["saldo_inicial"]))
-    m2.metric("Entradas", fmt_brl(dados["total_entradas"]))
-    m3.metric("Saídas", fmt_brl(dados["total_saidas"]))
-    m4.metric("Saldo final", fmt_brl(dados["saldo_final"]))
+    m1.metric("Saldo inicial", fmt_brl_md(dados["saldo_inicial"]))
+    m2.metric("Entradas", fmt_brl_md(dados["total_entradas"]))
+    m3.metric("Saídas", fmt_brl_md(dados["total_saidas"]))
+    m4.metric("Saldo final", fmt_brl_md(dados["saldo_final"]))
     colunas = {"entradas": "Entradas", "saidas": "Saídas"}
     _graficos(dados["periodos"], colunas)
     _tabela(dados["periodos"], colunas, agrupamento)
@@ -91,14 +91,14 @@ def _projetado() -> None:
         return
 
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Saldo atual", fmt_brl(dados["saldo_inicial"]))
-    m2.metric("A receber", fmt_brl(dados["total_receber"]))
-    m3.metric("A pagar", fmt_brl(dados["total_pagar"]))
-    m4.metric("Saldo projetado", fmt_brl(dados["saldo_final"]))
+    m1.metric("Saldo atual", fmt_brl_md(dados["saldo_inicial"]))
+    m2.metric("A receber", fmt_brl_md(dados["total_receber"]))
+    m3.metric("A pagar", fmt_brl_md(dados["total_pagar"]))
+    m4.metric("Saldo projetado", fmt_brl_md(dados["saldo_final"]))
     if dados["atraso_receber"] or dados["atraso_pagar"]:
         st.caption(
-            f"Contas já vencidas (a receber {fmt_brl(dados['atraso_receber'])}, "
-            f"a pagar {fmt_brl(dados['atraso_pagar'])}) entram no início da projeção, "
+            f"Contas já vencidas (a receber {fmt_brl_md(dados['atraso_receber'])}, "
+            f"a pagar {fmt_brl_md(dados['atraso_pagar'])}) entram no início da projeção, "
             "como se fossem liquidadas hoje."
         )
     colunas = {"receber": "A receber", "pagar": "A pagar"}

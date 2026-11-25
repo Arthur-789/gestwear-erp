@@ -6,7 +6,7 @@ import streamlit as st
 
 from services import tesouraria_service as tesouraria
 from utils.datas import hoje
-from utils.formatacao import fmt_brl
+from utils.formatacao import fmt_brl, fmt_brl_md
 
 
 def formulario_baixa(
@@ -37,7 +37,7 @@ def formulario_baixa(
     if saida and conta_id is not None and contas[conta_id]["saldo_atual"] < valor:
         st.warning(
             f"O saldo de {contas[conta_id]['nome']} ficará negativo após este pagamento "
-            f"({fmt_brl(contas[conta_id]['saldo_atual'] - valor)})."
+            f"({fmt_brl_md(contas[conta_id]['saldo_atual'] - valor)})."
         )
     clicou = st.button(rotulo_botao, type="primary", key=f"{chave}_confirmar", disabled=conta_id is None)
     return clicou, conta_id, data

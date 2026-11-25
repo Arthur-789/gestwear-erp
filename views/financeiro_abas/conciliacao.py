@@ -5,7 +5,7 @@ import streamlit as st
 from services import tesouraria_service as tesouraria
 from services.excecoes import RegraDeNegocioError
 from utils.datas import hoje
-from utils.formatacao import fmt_brl, fmt_datahora
+from utils.formatacao import fmt_brl, fmt_brl_md, fmt_datahora
 from utils.ui import avisar_apos_recarregar
 
 
@@ -34,9 +34,9 @@ def renderizar(usuario: dict) -> None:
     nonce = st.session_state.get("conc_nonce", 0)
 
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Saldo contábil", fmt_brl(conta["saldo_atual"]))
-    m2.metric("Saldo conciliado", fmt_brl(conta["saldo_conciliado"]))
-    m3.metric("Diferença", fmt_brl(conta["saldo_atual"] - conta["saldo_conciliado"]))
+    m1.metric("Saldo contábil", fmt_brl_md(conta["saldo_atual"]))
+    m2.metric("Saldo conciliado", fmt_brl_md(conta["saldo_conciliado"]))
+    m3.metric("Diferença", fmt_brl_md(conta["saldo_atual"] - conta["saldo_conciliado"]))
     m4.metric("Pendentes", conta["pendentes"])
     st.caption(
         "Concilie as movimentações que já conferem com o extrato do banco ou com a contagem do caixa. "

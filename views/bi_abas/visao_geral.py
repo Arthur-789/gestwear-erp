@@ -7,7 +7,7 @@ import streamlit as st
 
 from services import bi_service as bi
 from services import vendas_service
-from utils.formatacao import fmt_brl, fmt_decimal, fmt_inteiro, fmt_pct
+from utils.formatacao import fmt_brl, fmt_brl_md, fmt_decimal, fmt_inteiro, fmt_pct
 from views.bi_abas import comum
 
 
@@ -18,11 +18,11 @@ def _destaques(atual: dict, anterior: dict, inicio: date, fim: date) -> list[str
     if variacao is not None:
         sentido = "alta" if variacao >= 0 else "queda"
         textos.append(
-            f"O faturamento foi de {fmt_brl(atual['faturamento'])}, com {sentido} de "
-            f"{fmt_pct(abs(variacao))} sobre o período anterior ({fmt_brl(anterior['faturamento'])})."
+            f"O faturamento foi de {fmt_brl_md(atual['faturamento'])}, com {sentido} de "
+            f"{fmt_pct(abs(variacao))} sobre o período anterior ({fmt_brl_md(anterior['faturamento'])})."
         )
     elif atual["num_vendas"]:
-        textos.append(f"O faturamento foi de {fmt_brl(atual['faturamento'])} (sem período anterior para comparar).")
+        textos.append(f"O faturamento foi de {fmt_brl_md(atual['faturamento'])} (sem período anterior para comparar).")
     if atual["margem_pct"] is not None:
         textos.append(
             f"A margem bruta foi de {fmt_pct(atual['margem_pct'])}"
@@ -36,8 +36,8 @@ def _destaques(atual: dict, anterior: dict, inicio: date, fim: date) -> list[str
         melhor = max(dias, key=lambda d: d["media_por_dia"])
         pior = min(dias, key=lambda d: d["media_por_dia"])
         textos.append(
-            f"{melhor['nome']} é o dia mais forte (média de {fmt_brl(melhor['media_por_dia'])} por dia) "
-            f"e {pior['nome'].lower()} o mais fraco ({fmt_brl(pior['media_por_dia'])})."
+            f"{melhor['nome']} é o dia mais forte (média de {fmt_brl_md(melhor['media_por_dia'])} por dia) "
+            f"e {pior['nome'].lower()} o mais fraco ({fmt_brl_md(pior['media_por_dia'])})."
         )
     formas = comum.vendas_por_forma_pagamento(inicio, fim)
     if formas and atual["faturamento"]:
@@ -56,7 +56,7 @@ def _destaques(atual: dict, anterior: dict, inicio: date, fim: date) -> list[str
     contas = comum.situacao_contas()
     if contas["receber"]["vencido"]:
         textos.append(
-            f"Há {fmt_brl(contas['receber']['vencido'])} vencidos a receber, "
+            f"Há {fmt_brl_md(contas['receber']['vencido'])} vencidos a receber, "
             f"{fmt_pct(contas['receber']['pct_vencido'])} da carteira em aberto."
         )
     estoque = comum.posicao_estoque()
@@ -110,18 +110,18 @@ def renderizar(inicio: date, fim: date, agrupamento: str) -> None:
         comum.sem_dados("Não há vendas no período selecionado. Os indicadores abaixo ficam zerados.")
 
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Faturamento", fmt_brl(atual["faturamento"]), delta("faturamento"), help="Soma das vendas, já com desconto.")
-    m2.metric("Receita líquida", fmt_brl(atual["receita_liquida"]), delta("receita_liquida"),
+    m1.metric("Faturamento", fmt_brl_md(atual["faturamento"]), delta("faturamento"), help="Soma das vendas, já com desconto.")
+    m2.metric("Receita líquida", fmt_brl_md(atual["receita_liquida"]), delta("receita_liquida"),
               help="Vendas menos devoluções, mais os itens novos das trocas.")
-    m3.metric("Margem bruta", fmt_brl(atual["margem_bruta"]), delta("margem_bruta"),
+    m3.metric("Margem bruta", fmt_brl_md(atual["margem_bruta"]), delta("margem_bruta"),
               help=f"Receita líquida menos o custo das mercadorias ({fmt_pct(atual['margem_pct'])} da receita).")
-    m4.metric("Resultado", fmt_brl(atual["resultado"]),
+    m4.metric("Resultado", fmt_brl_md(atual["resultado"]),
               comum.pct_variacao(atual["resultado"], anterior["resultado"]) if tem_base and anterior["resultado"] > 0 else None,
               help="Margem bruta menos as despesas operacionais do período.")
 
     m5, m6, m7, m8 = st.columns(4)
     m5.metric("Vendas", fmt_inteiro(atual["num_vendas"]), delta("num_vendas"))
-    m6.metric("Ticket médio", fmt_brl(atual["ticket_medio"]), delta("ticket_medio"))
+    m6.metric("Ticket médio", fmt_brl_md(atual["ticket_medio"]), delta("ticket_medio"))
     m7.metric("Itens por venda", fmt_decimal(atual["itens_por_venda"], 2), delta("itens_por_venda"))
     m8.metric("Margem bruta (%)", fmt_pct(atual["margem_pct"]),
               None if atual["margem_pct"] is None or anterior["margem_pct"] is None
@@ -132,10 +132,10 @@ def renderizar(inicio: date, fim: date, agrupamento: str) -> None:
     estoque = comum.posicao_estoque()
     saldo = sum((c["saldo_atual"] for c in comum.contas_financeiras(True)), Decimal("0.00"))
     s1, s2, s3, s4 = st.columns(4)
-    s1.metric("Saldo em caixa e bancos", fmt_brl(saldo))
-    s2.metric("A receber vencido", fmt_brl(contas["receber"]["vencido"]),
+    s1.metric("Saldo em caixa e bancos", fmt_brl_md(saldo))
+    s2.metric("A receber vencido", fmt_brl_md(contas["receber"]["vencido"]),
               f"{fmt_pct(contas['receber']['pct_vencido'])} da carteira", delta_color="off", delta_arrow="off")
-    s3.metric("A pagar vencido", fmt_brl(contas["pagar"]["vencido"]))
+    s3.metric("A pagar vencido", fmt_brl_md(contas["pagar"]["vencido"]))
     s4.metric("SKUs em estoque crítico", fmt_inteiro(estoque["criticos"]),
               f"{fmt_inteiro(estoque['zerados'])} zerados", delta_color="off", delta_arrow="off")
 

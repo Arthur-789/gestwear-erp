@@ -6,7 +6,7 @@ from config import PERFIS_GESTAO
 from services import catalogo_service as catalogo
 from services.auth_service import usuario_atual
 from services.excecoes import RegraDeNegocioError
-from utils.formatacao import fmt_brl, rotulo_situacao
+from utils.formatacao import fmt_brl, fmt_brl_md, rotulo_situacao
 from utils.ui import avisar_apos_recarregar, exibir_mensagens
 
 usuario = usuario_atual()
@@ -26,7 +26,7 @@ def tabela_variacoes(variacoes: list[dict]) -> pd.DataFrame:
             "Preço": fmt_brl(v["preco_venda"]),
         }
         if pode_editar:
-            linha["Custo médio"] = fmt_brl(v["custo_medio"])
+            linha["Custo médio"] = fmt_brl_md(v["custo_medio"])
         linha.update(
             {
                 "Estoque": v["estoque_atual"],

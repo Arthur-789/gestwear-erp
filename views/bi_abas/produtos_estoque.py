@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 
 from services import bi_service as bi
-from utils.formatacao import fmt_brl, fmt_data, fmt_decimal, fmt_inteiro, fmt_pct
+from utils.formatacao import fmt_brl, fmt_brl_md, fmt_data, fmt_decimal, fmt_inteiro, fmt_pct
 from views.bi_abas import comum
 
 _METRICAS = {
@@ -131,8 +131,8 @@ def _estoque(inicio: date, fim: date) -> None:
     posicao = comum.posicao_estoque()
     linhas = comum.giro_por_sku(inicio, fim)
     m1, m2, m3, m4, m5 = st.columns(5)
-    m1.metric("Valor em estoque (custo)", fmt_brl(posicao["valor_custo"]))
-    m2.metric("Valor potencial de venda", fmt_brl(posicao["valor_venda"]))
+    m1.metric("Valor em estoque (custo)", fmt_brl_md(posicao["valor_custo"]))
+    m2.metric("Valor potencial de venda", fmt_brl_md(posicao["valor_venda"]))
     m3.metric("Unidades em estoque", fmt_inteiro(posicao["unidades"]))
     m4.metric("SKUs críticos", fmt_inteiro(posicao["criticos"]), f"de {fmt_inteiro(posicao['skus'])} ativos",
               delta_color="off", delta_arrow="off")
@@ -197,7 +197,7 @@ def _estoque(inicio: date, fim: date) -> None:
     valor_parado = sum((s["valor_custo"] for s in parados), 0)
     p1, p2 = st.columns(2)
     p1.metric("SKUs sem venda no período", fmt_inteiro(len(parados)))
-    p2.metric("Capital imobilizado (custo)", fmt_brl(valor_parado),
+    p2.metric("Capital imobilizado (custo)", fmt_brl_md(valor_parado),
               f"{fmt_pct(valor_parado / posicao['valor_custo'])} do estoque" if posicao["valor_custo"] else None,
               delta_color="off", delta_arrow="off")
     if parados:

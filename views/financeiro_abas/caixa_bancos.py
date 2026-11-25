@@ -8,7 +8,7 @@ import streamlit as st
 from services import tesouraria_service as tesouraria
 from services.excecoes import RegraDeNegocioError
 from utils.datas import hoje
-from utils.formatacao import fmt_brl, fmt_datahora
+from utils.formatacao import fmt_brl, fmt_brl_md, fmt_datahora
 from utils.ui import avisar_apos_recarregar
 
 
@@ -66,7 +66,7 @@ def renderizar(usuario: dict) -> None:
     ativas = [c for c in contas if c["ativa"]]
     st.metric(
         "Saldo total das contas ativas",
-        fmt_brl(sum((c["saldo_atual"] for c in ativas), Decimal("0.00"))),
+        fmt_brl_md(sum((c["saldo_atual"] for c in ativas), Decimal("0.00"))),
     )
     st.dataframe(
         pd.DataFrame(
@@ -101,9 +101,9 @@ def renderizar(usuario: dict) -> None:
 
     totais = tesouraria.totais_extrato(conta_id, data_de, data_ate)
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Entradas", fmt_brl(totais["entradas"]))
-    m2.metric("Saídas", fmt_brl(totais["saidas"]))
-    m3.metric("Resultado do período", fmt_brl(totais["entradas"] - totais["saidas"]))
+    m1.metric("Entradas", fmt_brl_md(totais["entradas"]))
+    m2.metric("Saídas", fmt_brl_md(totais["saidas"]))
+    m3.metric("Resultado do período", fmt_brl_md(totais["entradas"] - totais["saidas"]))
     m4.metric("Movimentações", totais["total"])
 
     limite = 500

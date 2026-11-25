@@ -1,4 +1,5 @@
 """Funções de formatação para exibição."""
+import re
 from datetime import date, datetime
 from decimal import Decimal
 
@@ -24,6 +25,19 @@ def fmt_brl(valor: Decimal | float | int | None) -> str:
         return "-"
     texto = f"{float(valor):,.2f}"
     return "R$ " + texto.replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def escapar_markdown(texto: str) -> str:
+    """Escapa o cifrão para o Streamlit não interpretar o trecho entre dois cifrões como fórmula.
+
+    Idempotente: cifrões já escapados não são escapados de novo.
+    """
+    return re.sub(r"(?<!\\)\$", r"\\$", texto)
+
+
+def fmt_brl_md(valor: Decimal | float | int | None) -> str:
+    """Como fmt_brl, mas seguro para widgets que renderizam markdown (texto, métrica, aviso)."""
+    return escapar_markdown(fmt_brl(valor))
 
 
 def fmt_inteiro(valor: int | float | Decimal | None) -> str:

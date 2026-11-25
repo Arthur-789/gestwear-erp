@@ -9,7 +9,7 @@ from services import fornecedores_service as fornecedores
 from services.excecoes import RegraDeNegocioError
 from utils.calculos import dividir_em_parcelas
 from utils.datas import hoje
-from utils.formatacao import fmt_brl, fmt_data, fmt_datahora
+from utils.formatacao import fmt_brl, fmt_brl_md, fmt_data, fmt_datahora
 from utils.ui import avisar_apos_recarregar
 from views.financeiro_abas.comum import formulario_baixa
 
@@ -37,8 +37,8 @@ def _nova_despesa(k: str) -> None:
         if parcelas > 1 and valor >= 0.01 * parcelas:
             valores = dividir_em_parcelas(Decimal(str(valor)), int(parcelas))
             st.caption(
-                f"{parcelas} parcelas mensais: {fmt_brl(valores[0])} cada"
-                + (f" (a última de {fmt_brl(valores[-1])})" if valores[-1] != valores[0] else "")
+                f"{parcelas} parcelas mensais: {fmt_brl_md(valores[0])} cada"
+                + (f" (a última de {fmt_brl_md(valores[-1])})" if valores[-1] != valores[0] else "")
                 + "."
             )
         if st.button("Registrar despesa", type="primary", key=f"{k}_registrar"):
@@ -131,9 +131,9 @@ def renderizar(usuario: dict) -> None:
     filtros = (situacao, origem, categoria_id, busca, venc_de, venc_ate)
     totais = pagar.resumo(*filtros)
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("A vencer", fmt_brl(totais["a_vencer"]))
-    m2.metric("Vencido", fmt_brl(totais["vencido"]))
-    m3.metric("Pago", fmt_brl(totais["pago"]))
+    m1.metric("A vencer", fmt_brl_md(totais["a_vencer"]))
+    m2.metric("Vencido", fmt_brl_md(totais["vencido"]))
+    m3.metric("Pago", fmt_brl_md(totais["pago"]))
     m4.metric("Contas", totais["total"])
 
     limite = 500
@@ -189,13 +189,13 @@ def renderizar(usuario: dict) -> None:
 
     if conta["status"] == "ABERTA":
         clicou, conta_financeira_id, data = formulario_baixa(
-            f"pag_baixa_{conta_id}", f"Registrar pagamento de {fmt_brl(conta['valor'])}",
+            f"pag_baixa_{conta_id}", f"Registrar pagamento de {fmt_brl_md(conta['valor'])}",
             "Pagar com", conta["valor"], conta["data_origem"], saida=True,
         )
         if clicou:
             try:
                 pagar.pagar(conta_id, conta_financeira_id, data, usuario["id"])
-                avisar_apos_recarregar(f"Pagamento de {fmt_brl(conta['valor'])} registrado.")
+                avisar_apos_recarregar(f"Pagamento de {fmt_brl_md(conta['valor'])} registrado.")
                 st.rerun()
             except RegraDeNegocioError as e:
                 st.error(str(e))

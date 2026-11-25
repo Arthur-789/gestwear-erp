@@ -11,7 +11,7 @@ from services import fornecedores_service as fornecedores
 from services.auth_service import exigir_perfil
 from services.excecoes import RegraDeNegocioError
 from utils.datas import data_local, hoje
-from utils.formatacao import fmt_brl, fmt_data
+from utils.formatacao import fmt_brl, fmt_brl_md, fmt_data
 from utils.ui import avisar_apos_recarregar, exibir_mensagens
 
 usuario = exigir_perfil("ADMIN", "GERENTE")
@@ -102,13 +102,13 @@ def editor_pedido(chave: str, inicial: dict, rotulo_botao: str) -> dict | None:
             col_a, col_b, col_c, col_d, col_e = st.columns([5, 1, 2, 2, 1], vertical_alignment="center")
             col_a.write(item["descricao"])
             col_b.write(item["quantidade"])
-            col_c.write(fmt_brl(item["custo_unitario"]))
-            col_d.write(fmt_brl(subtotal(item)))
+            col_c.write(fmt_brl_md(item["custo_unitario"]))
+            col_d.write(fmt_brl_md(subtotal(item)))
             if col_e.button("", icon=":material/delete:", key=f"{chave}_remover_{item['variacao_id']}"):
                 carrinho.pop(posicao)
                 st.rerun()
         total = sum((subtotal(i) for i in carrinho), Decimal("0"))
-        st.markdown(f"**Total do pedido: {fmt_brl(total)}**")
+        st.markdown(f"**Total do pedido: {fmt_brl_md(total)}**")
     else:
         st.caption("Nenhum item adicionado.")
 
@@ -218,7 +218,7 @@ with abas[2]:
 
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Situação", compras.STATUS_COMPRA[compra["status"]])
-    m2.metric("Valor total", fmt_brl(compra["valor_total"]))
+    m2.metric("Valor total", fmt_brl_md(compra["valor_total"]))
     m3.metric("Pedido em", fmt_data(compra["data_pedido"]))
     m4.metric("Recebimento", fmt_data(compra["data_recebimento"]))
     st.caption(
