@@ -15,16 +15,18 @@ Sistema de informação para uma loja de roupas, com ERP simplificado (cadastros
 
 ## Módulos
 
-| Módulo | Situação |
+| Módulo | Descrição |
 |---|---|
-| Autenticação e controle de acesso (perfis Admin, Gerente e Vendedor) | Implementado |
-| Cadastros (produtos e variações com SKU, clientes, fornecedores, categorias, tamanhos e cores) | Implementado |
-| Compras (pedido, recebimento e contas a pagar) | Implementado |
-| Estoque (posição, movimentações, alertas e ajuste de inventário) | Implementado |
-| Vendas (venda de balcão, baixa de estoque e contas a receber) | Implementado |
-| Operacional (trocas e devoluções, com retorno ao estoque e acerto financeiro) | Implementado |
-| Financeiro (contas a pagar e a receber, caixa e bancos, fluxo de caixa e conciliação) | Implementado |
-| Business Intelligence (dashboard com indicadores, rankings e análises temporais, comparativas e gerenciais) | Implementado |
+| Autenticação e controle de acesso | Perfis Admin, Gerente e Vendedor |
+| Cadastros | Produtos e variações com SKU, clientes, fornecedores, categorias, tamanhos e cores |
+| Compras | Pedido, recebimento e contas a pagar |
+| Estoque | Posição, movimentações, alertas e ajuste de inventário |
+| Vendas | Venda de balcão, baixa de estoque e contas a receber |
+| Operacional | Trocas e devoluções, com retorno ao estoque e acerto financeiro |
+| Financeiro | Contas a pagar e a receber, caixa e bancos, fluxo de caixa e conciliação |
+| Business Intelligence | Dashboard com indicadores, rankings e análises temporais, comparativas e gerenciais |
+
+A descrição completa do sistema, do modelo de dados, das regras de negócio e dos indicadores está em [`documentacao/DOCUMENTACAO.md`](documentacao/DOCUMENTACAO.md).
 
 ## Estrutura do projeto
 
@@ -37,6 +39,7 @@ Sistema de informação para uma loja de roupas, com ERP simplificado (cadastros
 | `db/` | Conexão e acesso ao PostgreSQL |
 | `utils/` | Funções auxiliares (formatação) |
 | `scripts/` | Utilitários de linha de comando (`popular_dados.py`) |
+| `documentacao/` | Documentação do sistema e do dashboard de BI |
 | `database/` | Scripts SQL: `schema.sql`, `seed_inicial.sql`, `reset.sql`, `teste_banco.sql` e `migracoes/` (ajustes para bancos criados em versões anteriores) |
 | `.streamlit/` | Configuração do Streamlit e modelo de segredos |
 
