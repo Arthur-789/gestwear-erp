@@ -3,7 +3,6 @@ from decimal import Decimal
 from zoneinfo import ZoneInfo
 
 APP_NOME = "GestWear ERP"
-APP_ICONE = "👕"
 
 # Fuso horário de exibição (o banco armazena timestamptz)
 FUSO = ZoneInfo("America/Recife")

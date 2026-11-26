@@ -6,9 +6,10 @@ from config import APP_NOME
 from db.connection import fetch_one
 from services import estoque_service
 from services.auth_service import usuario_atual
+from utils.ui import cabecalho
 
 usuario = usuario_atual()
-st.title(APP_NOME)
+cabecalho(APP_NOME, "inicio")
 st.write(f"Olá, **{usuario['nome']}**. Perfil: **{usuario['perfil'].title()}**.")
 
 st.subheader("Situação do sistema")

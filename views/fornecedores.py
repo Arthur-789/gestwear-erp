@@ -7,11 +7,11 @@ from services import fornecedores_service as fornecedores
 from services.auth_service import exigir_perfil
 from services.excecoes import RegraDeNegocioError
 from utils.formatacao import fmt_cnpj, fmt_data, fmt_telefone, rotulo_situacao
-from utils.ui import avisar_apos_recarregar, exibir_mensagens
+from utils.ui import avisar_apos_recarregar, cabecalho, exibir_mensagens
 
 exigir_perfil("ADMIN", "GERENTE")
 
-st.title("Fornecedores")
+cabecalho("Fornecedores", "fornecedores")
 exibir_mensagens()
 
 aba_lista, aba_novo, aba_editar = st.tabs(["Lista", "Novo fornecedor", "Editar fornecedor"])

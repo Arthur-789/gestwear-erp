@@ -6,9 +6,9 @@ from config import UFS
 from services import clientes_service as clientes
 from services.excecoes import RegraDeNegocioError
 from utils.formatacao import fmt_cpf, fmt_data, fmt_telefone, rotulo_situacao
-from utils.ui import avisar_apos_recarregar, exibir_mensagens
+from utils.ui import avisar_apos_recarregar, cabecalho, exibir_mensagens
 
-st.title("Clientes")
+cabecalho("Clientes", "clientes")
 exibir_mensagens()
 
 aba_lista, aba_novo, aba_editar = st.tabs(["Lista", "Novo cliente", "Editar cliente"])

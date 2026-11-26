@@ -8,7 +8,7 @@ Sistema de informação para uma loja de roupas, com ERP simplificado (cadastros
 
 | Camada | Tecnologia |
 |---|---|
-| Aplicação e interface | Python 3.12 e Streamlit |
+| Aplicação e interface | Python 3.12 e Streamlit (tema claro e escuro, em azul-marinho e coral) |
 | Banco de dados | PostgreSQL hospedado no Supabase |
 | Autenticação | Login com conta Google (OpenID Connect via `st.login`) |
 | Publicação | Streamlit Community Cloud |
@@ -37,11 +37,12 @@ A descrição completa do sistema, do modelo de dados, das regras de negócio e 
 | `views/` | Interface (uma página por funcionalidade) |
 | `services/` | Regras de negócio e integração entre módulos |
 | `db/` | Conexão e acesso ao PostgreSQL |
-| `utils/` | Funções auxiliares (formatação) |
+| `utils/` | Funções auxiliares (formatação e componentes de interface) |
+| `assets/` | Logo, ícones das páginas e ilustração da tela de login (SVG) |
 | `scripts/` | Utilitários de linha de comando (`popular_dados.py`) |
 | `documentacao/` | Documentação do sistema e do dashboard de BI |
 | `database/` | Scripts SQL: `schema.sql`, `seed_inicial.sql`, `reset.sql`, `teste_banco.sql` e `migracoes/` (ajustes para bancos criados em versões anteriores) |
-| `.streamlit/` | Configuração do Streamlit e modelo de segredos |
+| `.streamlit/` | Configuração do Streamlit (tema claro e escuro) e modelo de segredos |
 
 ## Requisitos
 

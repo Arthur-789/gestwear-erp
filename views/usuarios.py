@@ -7,10 +7,11 @@ from services import usuarios_service
 from services.auth_service import exigir_perfil
 from services.excecoes import RegraDeNegocioError
 from utils.formatacao import fmt_datahora
+from utils.ui import cabecalho
 
 ator = exigir_perfil("ADMIN")
 
-st.title("Usuários")
+cabecalho("Usuários", "usuarios")
 st.caption("Somente e-mails cadastrados aqui conseguem entrar no sistema (login Google).")
 
 aba_lista, aba_novo, aba_editar = st.tabs(["Lista", "Novo usuário", "Editar usuário"])

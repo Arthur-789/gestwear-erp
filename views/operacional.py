@@ -12,12 +12,12 @@ from services.auth_service import usuario_atual
 from services.excecoes import RegraDeNegocioError
 from utils.datas import data_local, hoje
 from utils.formatacao import escapar_markdown, fmt_brl, fmt_brl_md, fmt_data, fmt_datahora
-from utils.ui import avisar_apos_recarregar, exibir_mensagens
+from utils.ui import avisar_apos_recarregar, cabecalho, exibir_mensagens
 
 usuario = usuario_atual()
 pode_ver_custo = usuario["perfil"] in PERFIS_GESTAO
 
-st.title("Trocas e devoluções")
+cabecalho("Trocas e devoluções", "trocas")
 exibir_mensagens()
 
 

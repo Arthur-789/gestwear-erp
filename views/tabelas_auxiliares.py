@@ -6,11 +6,11 @@ from services import catalogo_service as catalogo
 from services.auth_service import exigir_perfil
 from services.excecoes import RegraDeNegocioError
 from utils.formatacao import rotulo_situacao
-from utils.ui import avisar_apos_recarregar, exibir_mensagens
+from utils.ui import avisar_apos_recarregar, cabecalho, exibir_mensagens
 
 exigir_perfil("ADMIN", "GERENTE")
 
-st.title("Tabelas auxiliares")
+cabecalho("Tabelas auxiliares", "tabelas")
 st.caption("Categorias, tamanhos e cores usados na composição dos produtos e dos SKUs.")
 exibir_mensagens()
 

@@ -1,10 +1,13 @@
 """Ponto de entrada: login, menu por perfil e execução da página."""
 import streamlit as st
 
-from config import APP_ICONE, APP_NOME, PERFIS, PERFIS_GESTAO
+from config import APP_NOME, PERFIS, PERFIS_GESTAO
 from services.auth_service import exigir_login
+from utils.ui import ASSETS
 
-st.set_page_config(page_title=APP_NOME, page_icon=APP_ICONE, layout="wide")
+st.set_page_config(page_title=APP_NOME, page_icon=str(ASSETS / "favicon.png"), layout="wide")
+
+st.logo(str(ASSETS / "logo_escuro.svg"), icon_image=str(ASSETS / "icone.svg"), size="large")
 
 usuario = exigir_login()
 st.session_state["usuario"] = usuario

@@ -3,12 +3,12 @@ import streamlit as st
 
 from config import PERFIS_GESTAO
 from services.auth_service import exigir_perfil
-from utils.ui import exibir_mensagens
+from utils.ui import cabecalho, exibir_mensagens
 from views.financeiro_abas import caixa_bancos, conciliacao, contas_pagar, contas_receber, fluxo_caixa
 
 usuario = exigir_perfil(*PERFIS_GESTAO)
 
-st.title("Financeiro")
+cabecalho("Financeiro", "financeiro")
 exibir_mensagens()
 
 abas = st.tabs(["Contas a pagar", "Contas a receber", "Caixa e bancos", "Fluxo de caixa", "Conciliação"])

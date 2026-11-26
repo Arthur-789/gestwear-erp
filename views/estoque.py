@@ -11,12 +11,12 @@ from services.auth_service import usuario_atual
 from services.excecoes import RegraDeNegocioError
 from utils.datas import hoje
 from utils.formatacao import fmt_brl_md, fmt_datahora
-from utils.ui import avisar_apos_recarregar, exibir_mensagens
+from utils.ui import avisar_apos_recarregar, cabecalho, exibir_mensagens
 
 usuario = usuario_atual()
 pode_ajustar = usuario["perfil"] in PERFIS_GESTAO
 
-st.title("Estoque")
+cabecalho("Estoque", "estoque")
 exibir_mensagens()
 
 

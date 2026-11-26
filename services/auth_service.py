@@ -1,8 +1,8 @@
 """Autenticação (Google via st.login) e autorização por perfil."""
 import streamlit as st
 
-from config import APP_ICONE, APP_NOME
 from services import usuarios_service
+from utils.ui import ilustracao_login, logo_marca
 
 
 def _auth_configurado() -> bool:
@@ -15,7 +15,8 @@ def _auth_configurado() -> bool:
 def _tela_login() -> None:
     _, centro, _ = st.columns([1, 2, 1])
     with centro:
-        st.title(f"{APP_ICONE} {APP_NOME}")
+        logo_marca(260)
+        ilustracao_login(440)
         st.write("Acesso restrito a usuários autorizados.")
         if not _auth_configurado():
             st.error(
@@ -29,7 +30,7 @@ def _tela_login() -> None:
 def _tela_negado(email: str, motivo: str) -> None:
     _, centro, _ = st.columns([1, 2, 1])
     with centro:
-        st.title(f"{APP_ICONE} {APP_NOME}")
+        logo_marca(260)
         st.error(f"Acesso negado para **{email}**. {motivo}")
         st.button("Sair", icon=":material/logout:", on_click=st.logout)
 

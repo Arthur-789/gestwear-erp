@@ -4,10 +4,11 @@ import streamlit as st
 from config import PERFIS_GESTAO
 from services.auth_service import exigir_perfil
 from views.bi_abas import comum, financeiro, operacoes, produtos_estoque, vendas, visao_geral
+from utils.ui import cabecalho
 
 exigir_perfil(*PERFIS_GESTAO)
 
-st.title("Dashboard BI")
+cabecalho("Dashboard BI", "bi")
 inicio, fim, agrupamento = comum.seletor_periodo()
 
 abas = st.tabs(["Visão geral", "Vendas", "Produtos e estoque", "Financeiro", "Operações"])

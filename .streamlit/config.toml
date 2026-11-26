@@ -1,5 +1,37 @@
-[theme]
-primaryColor = "#7C3AED"
-
 [browser]
 gatherUsageStats = false
+
+[theme]
+base = "light"
+primaryColor = "#D44630"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F2F4F9"
+textColor = "#14213D"
+linkColor = "#2F5FB3"
+borderColor = "#DDE2EC"
+baseRadius = "0.6rem"
+chartCategoricalColors = ["#D44630", "#2F5FB3", "#F2A65A", "#3E9C8F", "#8E7DBE", "#14213D"]
+
+[theme.sidebar]
+backgroundColor = "#14213D"
+secondaryBackgroundColor = "#1F3159"
+textColor = "#E8ECF5"
+primaryColor = "#FF7A62"
+borderColor = "#2B3F6B"
+
+[theme.dark]
+primaryColor = "#F26B52"
+backgroundColor = "#0F1626"
+secondaryBackgroundColor = "#18233B"
+textColor = "#E8ECF5"
+linkColor = "#8DB4F0"
+borderColor = "#2B3A59"
+baseRadius = "0.6rem"
+chartCategoricalColors = ["#F26B52", "#7FA8E0", "#F2B66D", "#6CCBB8", "#B79EE8", "#E8ECF5"]
+
+[theme.dark.sidebar]
+backgroundColor = "#0A101D"
+secondaryBackgroundColor = "#18233B"
+textColor = "#E8ECF5"
+primaryColor = "#FF7A62"
+borderColor = "#1F2C47"
